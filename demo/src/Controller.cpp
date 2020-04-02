@@ -25,20 +25,31 @@ KeyPresser::KeyPresser(Player *player, QWidget *parent)
 
 KeyPresser::KeyPresser(Player *player1, Player *player2, QWidget *parent)
     : player_manipulator_(player1)
-    , second_player_manipulator(player2) {
+    , second_player_manipulator(player2) { // Сюда добавить кнопки, которые ты хочешь (видимо строелочки)
     setWindowOpacity(0.0);
     setFocus();
 }
 
 void KeyPresser::keyPressEvent(QKeyEvent *event) {
     if (!event->isAutoRepeat()) {
-        player_manipulator_.press((Qt::Key) event->key()); //TODO cast
-        qDebug() << "Pressed!";
+	if (player_manipulator_.is_active()) {
+	    player_manipulator_.press((Qt::Key) event->key()); //TODO cast
+	    qDebug() << "Pressed!";
+	}
+	if (second_player_manipulator.is_active()) {
+	    second_player_manipulator.press((Qt::Key) event->key()); //TODO cast
+	    qDebug() << "Pressed!";
+	}
     }
 }
 
 void KeyPresser::keyReleaseEvent(QKeyEvent *event) {
-    player_manipulator_.release((Qt::Key) event->key()); //TODO cast
+    if (player_manipulator_.is_active()) {
+	player_manipulator_.release((Qt::Key) event->key()); //TODO cast
+    }
+    if (second_player_manipulator.is_active()) {
+	second_player_manipulator.release((Qt::Key) event->key()); //TODO cast
+    }
 }
 
 KeyPresser::PlayerManipulator_::PlayerManipulator_(Player *player, Qt::Key up_key, Qt::Key left_key,
