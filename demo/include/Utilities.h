@@ -13,3 +13,6 @@ enum class BlockColor {
     GREEN,
     // ...
 };
+
+#define unused(p) (void)p
+// TODO may not work
