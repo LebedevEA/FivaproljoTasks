@@ -18,7 +18,7 @@ void Controller::runGame() { // later - add loop
 }
 
 KeyPresser::KeyPresser(Player *player, QWidget *parent)
-        : player_manipulator_(player) {
+    : player_manipulator_(player) {
     setWindowOpacity(0.0);
     setFocus();
 }
@@ -34,11 +34,17 @@ void KeyPresser::keyReleaseEvent(QKeyEvent *event) {
     player_manipulator_.release((Qt::Key) event->key()); //TODO cast
 }
 
-KeyPresser::PlayerManipulator_::PlayerManipulator_(Player *player)
-        : player_(player), W(Qt::Key_W), D(Qt::Key_D), A(Qt::Key_A), S(Qt::Key_S) {}
+KeyPresser::PlayerManipulator_::PlayerManipulator_(Player *player, Qt::Key up_key, Qt::Key left_key,
+						   Qt::Key down_key, Qt::Key right_key)
+    : player_(player)
+    , UP(up_key)
+    , LEFT(left_key)
+    , DOWN(down_key)
+    , RIGHT(right_key)
+{}
 
 KeyPresser::PlayerManipulator_::Key_::Key_(Qt::Key qt_name)
-        : qt_name_(qt_name), is_pressed_(false) {}
+    : qt_name_(qt_name), is_pressed_(false) {}
 
 KeyPresser::PlayerManipulator_::Key_::operator Qt::Key() const {
     return qt_name_;
@@ -57,16 +63,16 @@ void KeyPresser::PlayerManipulator_::Key_::release() {
 }
 
 void KeyPresser::PlayerManipulator_::press(Qt::Key k) {
-    if (k == W) {
-        W.press();
+    if (k == UP) {
+        UP.press();
         player_->start_jumping();
-    } else if (k == A) {
-        A.press();
+    } else if (k == LEFT) {
+        LEFT.press();
         player_->moving = true;
         player_->direction = Direction::LEFT; // Left
         player_->change_direction();
-    } else if (k == D) {
-        D.press();
+    } else if (k == RIGHT) {
+        RIGHT.press();
         player_->moving = true;
         player_->direction = Direction::RIGHT; // Right
         player_->change_direction();
@@ -74,11 +80,11 @@ void KeyPresser::PlayerManipulator_::press(Qt::Key k) {
 }
 
 void KeyPresser::PlayerManipulator_::release(Qt::Key k) {
-    if (k == W) {
-        W.release();
-    } else if (k == A) {
-        A.release();
-        if (D.is_pressed()) {
+        if (k == UP) {
+        UP.release();
+    } else if (k == LEFT) {
+        LEFT.release();
+        if (RIGHT.is_pressed()) {
             player_->moving = true;
             player_->direction = Direction::RIGHT; // Right
             player_->change_direction();
@@ -86,9 +92,9 @@ void KeyPresser::PlayerManipulator_::release(Qt::Key k) {
             player_->moving = false;
             player_->direction = Direction::UNKNOWN;
         }
-    } else if (k == D) {
-        D.release();
-        if (A.is_pressed()) {
+    } else if (k == RIGHT) {
+        RIGHT.release();
+        if (LEFT.is_pressed()) {
             player_->moving = true;
             player_->direction = Direction::LEFT; // Left
             player_->change_direction();

@@ -20,7 +20,8 @@ protected:
 private:
     class PlayerManipulator_ {
     public:
-	PlayerManipulator_(Player* player);
+	PlayerManipulator_(Player* player, Qt::Key up_key = Qt::Key_W, Qt::Key left_key = Qt::Key_A,
+	                   Qt::Key down_key = Qt::Key_S, Qt::Key right_key = Qt::Key_D);
     	void press(Qt::Key k);
     	void release(Qt::Key k);
     private:
@@ -36,9 +37,10 @@ private:
     	private:
     	    Qt::Key qt_name_;
     	    bool is_pressed_;
-    	} W, A, S, D;
+    	} UP, LEFT, DOWN, RIGHT;
         Player *player_;
-    } player_manipulator_;
+    };
+    PlayerManipulator_  player_manipulator_;
 };
 
 class Controller {
