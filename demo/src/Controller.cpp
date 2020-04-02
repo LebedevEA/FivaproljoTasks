@@ -41,6 +41,11 @@ KeyPresser::PlayerManipulator_::PlayerManipulator_(Player *player, Qt::Key up_ke
     , LEFT(left_key)
     , DOWN(down_key)
     , RIGHT(right_key)
+    , is_active_(true)
+{}
+
+KeyPresser::PlayerManipulator_::PlayerManipulator_()
+    : player_(nullptr), UP(Qt::Key_W), RIGHT(Qt::Key_D), LEFT(Qt::Key_A), DOWN(Qt::Key_S)
 {}
 
 KeyPresser::PlayerManipulator_::Key_::Key_(Qt::Key qt_name)
@@ -103,4 +108,8 @@ void KeyPresser::PlayerManipulator_::release(Qt::Key k) {
             player_->direction = Direction::UNKNOWN;
         }
     }
+}
+
+bool KeyPresser::PlayerManipulator_::is_active() const {
+    return is_active_;
 }
