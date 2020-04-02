@@ -17,68 +17,121 @@ void Controller::runGame() { // later - add loop
     model_->make_new_level(scene_);
 }
 
-KeyPresser::KeyPresser(Player *player, QWidget *parent)
-        : player_manipulator_(player) {
+KeyPresser::KeyPresser(Player *player, QWidget *parent) {
+    manipulators_.push_back(new PlayerManipulator(player));
+    setWindowOpacity(0.0);
+    setFocus();
+}
+
+KeyPresser::KeyPresser(Player *player1, Player *player2, QWidget *parent) { // TODO добавить второго игрока в вектор
+    unused(player2);
+    manipulators_.push_back(new PlayerManipulator(player1));
     setWindowOpacity(0.0);
     setFocus();
 }
 
 void KeyPresser::keyPressEvent(QKeyEvent *event) {
-    if (!event->isAutoRepeat()) {
-        player_manipulator_.press((Qt::Key) event->key()); //TODO cast
-        qDebug() << "Pressed!";
+    for (auto manip : manipulators_) {
+	if (manip->active()) {
+            manip->press((Qt::Key)event->key()); //TODO cast
+	}
     }
+    // if (!event->isAutoRepeat()) {
+    // 	if (player_manipulator_.is_active()) {
+    // 	    player_manipulator_.press((Qt::Key) event->key()); //TODO cast
+    // 	    qDebug() << "Pressed!";
+    // 	}
+    // 	if (second_player_manipulator.is_active()) {
+    // 	    second_player_manipulator.press((Qt::Key) event->key()); //TODO cast
+    // 	    qDebug() << "Pressed!";
+    // 	}
+    // }
 }
 
 void KeyPresser::keyReleaseEvent(QKeyEvent *event) {
-    player_manipulator_.release((Qt::Key) event->key()); //TODO cast
+    for (auto manip : manipulators_) {
+	if (manip->active()) {
+            manip->release((Qt::Key)event->key()); //TODO cast
+	}
+    }
+    // if (player_manipulator_.is_active()) {
+    // 	player_manipulator_.release((Qt::Key) event->key()); //TODO cast
+    // }
+    // if (second_player_manipulator.is_active()) {
+    // 	second_player_manipulator.release((Qt::Key) event->key()); //TODO cast
+    // }
 }
 
-KeyPresser::PlayerManipulator_::PlayerManipulator_(Player *player)
-        : player_(player), W(Qt::Key_W), D(Qt::Key_D), A(Qt::Key_A), S(Qt::Key_S) {}
+bool KeyPresser::Manipulator::active() const {
+    return is_active_;
+}
 
-KeyPresser::PlayerManipulator_::Key_::Key_(Qt::Key qt_name)
-        : qt_name_(qt_name), is_pressed_(false) {}
+void KeyPresser::Manipulator::activate() {
+    is_active_ = true;
+}
 
-KeyPresser::PlayerManipulator_::Key_::operator Qt::Key() const {
+void KeyPresser::Manipulator::deactivate() {
+    is_active_ = false;
+}
+
+KeyPresser::PlayerManipulator::PlayerManipulator(Player *player, Qt::Key up_key, Qt::Key left_key,
+                                                 Qt::Key down_key, Qt::Key right_key)
+    : player_(player)
+    , UP(up_key)
+    , LEFT(left_key)
+    , DOWN(down_key)
+    , RIGHT(right_key) {
+    is_active_ = true; // TODO только пока без меню
+}
+
+// KeyPresser::PlayerManipulator_::PlayerManipulator_() // TODO костылина для Насти (смотри хедер строка 24)
+//     : player_(nullptr), UP(Qt::Key_W), RIGHT(Qt::Key_D), LEFT(Qt::Key_A), DOWN(Qt::Key_S)
+// {}
+
+KeyPresser::Key::Key(Qt::Key qt_name)
+    : qt_name_(qt_name)
+    , is_pressed_(false)
+{}
+
+KeyPresser::Key::operator Qt::Key() const {
     return qt_name_;
 }
 
-bool KeyPresser::PlayerManipulator_::Key_::is_pressed() const {
+bool KeyPresser::Key::is_pressed() const {
     return is_pressed_;
 }
 
-void KeyPresser::PlayerManipulator_::Key_::press() {
+void KeyPresser::Key::press() {
     is_pressed_ = true;
 }
 
-void KeyPresser::PlayerManipulator_::Key_::release() {
+void KeyPresser::Key::release() {
     is_pressed_ = false;
 }
 
-void KeyPresser::PlayerManipulator_::press(Qt::Key k) {
-    if (k == W) {
-        W.press();
+void KeyPresser::PlayerManipulator::press(Qt::Key k) {
+    if (k == UP) {
+        UP.press();
         player_->start_jumping();
-    } else if (k == A) {
-        A.press();
+    } else if (k == LEFT) {
+        LEFT.press();
         player_->moving = true;
         player_->direction = Direction::LEFT; // Left
         player_->change_direction();
-    } else if (k == D) {
-        D.press();
+    } else if (k == RIGHT) {
+        RIGHT.press();
         player_->moving = true;
         player_->direction = Direction::RIGHT; // Right
         player_->change_direction();
     }
 }
 
-void KeyPresser::PlayerManipulator_::release(Qt::Key k) {
-    if (k == W) {
-        W.release();
-    } else if (k == A) {
-        A.release();
-        if (D.is_pressed()) {
+void KeyPresser::PlayerManipulator::release(Qt::Key k) {
+        if (k == UP) {
+        UP.release();
+    } else if (k == LEFT) {
+        LEFT.release();
+        if (RIGHT.is_pressed()) {
             player_->moving = true;
             player_->direction = Direction::RIGHT; // Right
             player_->change_direction();
@@ -86,9 +139,9 @@ void KeyPresser::PlayerManipulator_::release(Qt::Key k) {
             player_->moving = false;
             player_->direction = Direction::UNKNOWN;
         }
-    } else if (k == D) {
-        D.release();
-        if (A.is_pressed()) {
+    } else if (k == RIGHT) {
+        RIGHT.release();
+        if (LEFT.is_pressed()) {
             player_->moving = true;
             player_->direction = Direction::LEFT; // Left
             player_->change_direction();
