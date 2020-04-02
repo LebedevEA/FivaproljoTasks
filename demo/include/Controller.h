@@ -55,7 +55,7 @@ private:
 	Key UP, LEFT, DOWN, RIGHT;
         Player *player_;
     };
-    // PlayerManipulator_  player_manipulator_, second_player_manipulator;
+    
     std::vector<Manipulator *> manipulators_;
 };
 

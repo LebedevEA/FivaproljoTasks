@@ -36,16 +36,6 @@ void KeyPresser::keyPressEvent(QKeyEvent *event) {
             manip->press((Qt::Key)event->key()); //TODO cast
 	}
     }
-    // if (!event->isAutoRepeat()) {
-    // 	if (player_manipulator_.is_active()) {
-    // 	    player_manipulator_.press((Qt::Key) event->key()); //TODO cast
-    // 	    qDebug() << "Pressed!";
-    // 	}
-    // 	if (second_player_manipulator.is_active()) {
-    // 	    second_player_manipulator.press((Qt::Key) event->key()); //TODO cast
-    // 	    qDebug() << "Pressed!";
-    // 	}
-    // }
 }
 
 void KeyPresser::keyReleaseEvent(QKeyEvent *event) {
@@ -54,12 +44,6 @@ void KeyPresser::keyReleaseEvent(QKeyEvent *event) {
             manip->release((Qt::Key)event->key()); //TODO cast
 	}
     }
-    // if (player_manipulator_.is_active()) {
-    // 	player_manipulator_.release((Qt::Key) event->key()); //TODO cast
-    // }
-    // if (second_player_manipulator.is_active()) {
-    // 	second_player_manipulator.release((Qt::Key) event->key()); //TODO cast
-    // }
 }
 
 bool KeyPresser::Manipulator::active() const {
@@ -83,10 +67,6 @@ KeyPresser::PlayerManipulator::PlayerManipulator(Player *player, Qt::Key up_key,
     , RIGHT(right_key) {
     is_active_ = true; // TODO только пока без меню
 }
-
-// KeyPresser::PlayerManipulator_::PlayerManipulator_() // TODO костылина для Насти (смотри хедер строка 24)
-//     : player_(nullptr), UP(Qt::Key_W), RIGHT(Qt::Key_D), LEFT(Qt::Key_A), DOWN(Qt::Key_S)
-// {}
 
 KeyPresser::Key::Key(Qt::Key qt_name)
     : qt_name_(qt_name)
@@ -116,12 +96,12 @@ void KeyPresser::PlayerManipulator::press(Qt::Key k) {
     } else if (k == LEFT) {
         LEFT.press();
         player_->moving = true;
-        player_->direction = Direction::LEFT; // Left
+        player_->direction = Direction::LEFT;
         player_->change_direction();
     } else if (k == RIGHT) {
         RIGHT.press();
         player_->moving = true;
-        player_->direction = Direction::RIGHT; // Right
+        player_->direction = Direction::RIGHT;
         player_->change_direction();
     }
 }
@@ -133,7 +113,7 @@ void KeyPresser::PlayerManipulator::release(Qt::Key k) {
         LEFT.release();
         if (RIGHT.is_pressed()) {
             player_->moving = true;
-            player_->direction = Direction::RIGHT; // Right
+            player_->direction = Direction::RIGHT;
             player_->change_direction();
         } else {
             player_->moving = false;
@@ -143,7 +123,7 @@ void KeyPresser::PlayerManipulator::release(Qt::Key k) {
         RIGHT.release();
         if (LEFT.is_pressed()) {
             player_->moving = true;
-            player_->direction = Direction::LEFT; // Left
+            player_->direction = Direction::LEFT;
             player_->change_direction();
         } else {
             player_->moving = false;
