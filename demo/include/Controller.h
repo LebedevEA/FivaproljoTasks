@@ -13,7 +13,7 @@
 class KeyPresser : public QWidget {
 public:
     explicit KeyPresser(Player *player, QWidget *parent = nullptr);
-//    KeyPresser(Player *player1, Player *player2, QWidget *parent = nullptr);
+    KeyPresser(Player *player1, Player *player2, QWidget *parent = nullptr);
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;

@@ -23,6 +23,13 @@ KeyPresser::KeyPresser(Player *player, QWidget *parent)
     setFocus();
 }
 
+KeyPresser::KeyPresser(Player *player1, Player *player2, QWidget *parent)
+    : player_manipulator_(player1)
+    , second_player_manipulator(player2) {
+    setWindowOpacity(0.0);
+    setFocus();
+}
+
 void KeyPresser::keyPressEvent(QKeyEvent *event) {
     if (!event->isAutoRepeat()) {
         player_manipulator_.press((Qt::Key) event->key()); //TODO cast
@@ -44,7 +51,7 @@ KeyPresser::PlayerManipulator_::PlayerManipulator_(Player *player, Qt::Key up_ke
     , is_active_(true)
 {}
 
-KeyPresser::PlayerManipulator_::PlayerManipulator_()
+KeyPresser::PlayerManipulator_::PlayerManipulator_() // TODO костылина для Насти (смотри хедер строка 24)
     : player_(nullptr), UP(Qt::Key_W), RIGHT(Qt::Key_D), LEFT(Qt::Key_A), DOWN(Qt::Key_S)
 {}
 
