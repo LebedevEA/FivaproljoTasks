@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <functional>
 #include <QWidget>
 #include <QtGui>
 #include <QGraphicsScene>
@@ -9,6 +10,7 @@
 #include "Player.h"
 #include "Scene.h"
 #include "Model.h"
+#include "Utilities.h"
 
 class KeyPresser : public QWidget {
 public:
@@ -30,7 +32,7 @@ private:
 	    
     private:
         Qt::Key qt_name_;
-        bool is_pressed_;
+        bool is_pressed_ = false;
     };
     
     class Manipulator {
@@ -40,10 +42,20 @@ private:
 	void deactivate();
 	virtual void press(Qt::Key) = 0;
 	virtual void release(Qt::Key) = 0;
+	
     protected:
 	bool is_active_ = false;
     };
-   
+
+    class MenuManipulator : public Manipulator {
+    public:
+	MenuManipulator();
+	void press(Qt::Key k) override;
+	void release(Qt::Key k) override;
+    private:
+	Key UP, DOWN;
+    };
+    
     class PlayerManipulator : public Manipulator {
     public:
 	PlayerManipulator() = delete;
@@ -51,6 +63,7 @@ private:
                        Qt::Key down_key = Qt::Key_S, Qt::Key right_key = Qt::Key_D);
         void press(Qt::Key k) override;
         void release(Qt::Key k) override;
+	
     private:
 	Key UP, LEFT, DOWN, RIGHT;
         Player *player_;
@@ -61,9 +74,13 @@ private:
 
 class Controller {
 public:
-    void runGame();
+    void runGame(MenuRetVal gamemod = MenuRetVal::NONE); //TODO mb change name
+    std::function<void()> call_menu; // TODO сделать сеттер и 
+    
 private:
+    bool is_menu_active = true;
     std::vector<Player *> players_;
+    Menu *menu_ = nullptr;
     Scene *scene_ = nullptr;
     Model *model_ = nullptr;
     KeyPresser *key_presser_ = nullptr;

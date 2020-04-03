@@ -15,4 +15,10 @@ enum class BlockColor {
 };
 
 #define unused(p) (void)p
-// TODO may not work
+
+enum class MenuRetVal {
+    RUN_SINGLEPLAYER,
+    RUN_MILTUPLAYER,
+    EXIT,
+    NONE
+};
