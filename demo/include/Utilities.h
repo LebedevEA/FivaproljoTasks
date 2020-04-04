@@ -1,5 +1,7 @@
 #pragma once
+
 namespace Utilities {
+    
     enum class Direction {
         RIGHT,
         LEFT,
@@ -14,4 +16,7 @@ namespace Utilities {
         YELLOW
         // ...
     };
-}
+    
+} // end namespace Utilities
+
+#define unused(p) (void)p
