@@ -32,7 +32,7 @@ endif()
 # set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt5Multimedia REQUIRED)
-add_executable(demo ${sources} include/Model.h include/Block.h)
+add_executable(demo ${sources} include/Model.h include/Block.h include/Menu.h include/MenuButton.h)
 target_link_libraries(demo Qt5::Widgets Qt5::Multimedia)
 # qt block end
 

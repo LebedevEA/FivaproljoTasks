@@ -38,3 +38,6 @@ void Scene::addWidget(KeyPresser *pPresser) {
     game_scene->addWidget((QWidget *) pPresser);
 }
 
+void Scene::add_button(Button *button) {
+    game_scene->addItem(button);
+}
