@@ -14,7 +14,7 @@ KeyPresser::KeyPresser(QWidget *parent) {
 void KeyPresser::keyPressEvent(QKeyEvent *event) {
     for (auto manip : manipulators_) {
 	if (manip->active()) {
-            manip->press((Qt::Key)event->key()); //TODO cast
+            manip->press(static_cast<Qt::Key>(event->key()));
 	}
     }
 }
@@ -22,7 +22,7 @@ void KeyPresser::keyPressEvent(QKeyEvent *event) {
 void KeyPresser::keyReleaseEvent(QKeyEvent *event) {
     for (auto manip : manipulators_) {
 	if (manip->active()) {
-            manip->release((Qt::Key)event->key()); //TODO cast
+            manip->release(static_cast<Qt::Key>(event->key()));
 	}
     }
 }
