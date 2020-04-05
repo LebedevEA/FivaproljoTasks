@@ -21,12 +21,12 @@ public:
     std::function<void(Utilities::GameState)> get_run_level();
     
 private:
-    std::vector<Player *> players_;
     Model *model_ = nullptr;
     Scene *scene_ = nullptr;
     KeyPresser *key_presser_ = nullptr;
-    Menu *menu_ = nullptr;
     StateMachine *state_machine_ = nullptr;
+    Menu *menu_ = nullptr;
     MenuHelper *menu_helper_ = nullptr; // Do not use, exists to delete it in destructor
     KeyPresserHelper *key_presser_helper_ = nullptr;
+    std::vector<Player *> players_;
 };

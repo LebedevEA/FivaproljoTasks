@@ -6,14 +6,14 @@
 #include <QTimer>
 #include "Controller.h"
 
-Controller::Controller() { // TODO мембер инициализер лист
-    model_ = new Model();
-    scene_ = new Scene();
-    key_presser_ = new KeyPresser();
-    state_machine_ = new StateMachine();
-    menu_ = new Menu(scene_, state_machine_);
-    menu_helper_ = new MenuHelper(menu_);
-    key_presser_helper_ = new KeyPresserHelper(key_presser_);
+Controller::Controller()
+    : model_(new Model())
+    , scene_(new Scene())
+    , key_presser_(new KeyPresser())
+    , state_machine_(new StateMachine())
+    , menu_(new Menu(scene_, state_machine_))
+    , menu_helper_(new MenuHelper(menu_))
+    , key_presser_helper_(new KeyPresserHelper(key_presser_)) {
     key_presser_->add_menu(menu_);
     
     state_machine_->set_function(this->get_run_level());
