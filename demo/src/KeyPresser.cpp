@@ -85,6 +85,8 @@ void KeyPresser::Key::release() {
     is_pressed_ = false;
 }
 
+KeyPresser::Manipulator::~Manipulator() {}
+
 KeyPresser::Manipulator::Manipulator(bool is_active, KeyPresserUtility::ManipulatorType manip_type)
     : is_active_(is_active)
     , manip_type_(manip_type)
@@ -114,6 +116,8 @@ KeyPresser::MenuManipulator::MenuManipulator(Menu *menu)
     , RETURN(Qt::Key_Return)
 {}
 
+KeyPresser::MenuManipulator::~MenuManipulator() {}
+
 void KeyPresser::MenuManipulator::press(Qt::Key k) {
     if (k == UP) {
 	menu_->go_up();
@@ -135,6 +139,8 @@ KeyPresser::PlayerManipulator::PlayerManipulator(Player *player, Qt::Key up_key,
     , DOWN(down_key)
     , RIGHT(right_key)
 {}
+
+KeyPresser::PlayerManipulator::~PlayerManipulator() {}
 
 void KeyPresser::PlayerManipulator::press(Qt::Key k) {
     if (k == UP) {

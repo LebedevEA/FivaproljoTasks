@@ -41,7 +41,9 @@ private:
     
     class Manipulator {
     public:
-	// TODO destructor
+	Manipulator(Manipulator&) = delete;
+	Manipulator &operator=(Manipulator&) = delete;
+	virtual ~Manipulator();
 	bool active() const;
 	void activate();
 	void deactivate();
@@ -58,6 +60,7 @@ private:
     class MenuManipulator : public Manipulator {
     public:
 	MenuManipulator(Menu *menu);
+	~MenuManipulator() override;
 	void press(Qt::Key k) override;
 	void release(Qt::Key k) override;
 	
@@ -71,6 +74,7 @@ private:
 	PlayerManipulator() = delete;
 	PlayerManipulator(Player *player, Qt::Key up_key = Qt::Key_W, Qt::Key left_key = Qt::Key_A,
 			  Qt::Key down_key = Qt::Key_S, Qt::Key right_key = Qt::Key_D); // порядок - W A S D.
+	~PlayerManipulator() override;
         void press(Qt::Key k) override;
         void release(Qt::Key k) override;
 	
