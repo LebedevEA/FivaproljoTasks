@@ -2,19 +2,17 @@
 
 Menu::Menu(Scene *scene, StateMachine *state_machine)
     : scene_(scene)
-    , state_machine_(state_machine) {
-    buttons_.push_back(new Button({100, 200}, Button::ButtonPurpose::MULTI_PLAYER));
-    buttons_.push_back(new Button({100, 500}, Button::ButtonPurpose::EXIT));
-}
+    , state_machine_(state_machine)
+{}
 
 void Menu::run_menu() {
+    buttons_.push_back(new Button({100, 200}, Button::ButtonPurpose::SINGLE_PLAYER));
+    buttons_.push_back(new Button({350, 200}, Button::ButtonPurpose::EXIT));
     for (auto button : buttons_) {
     	scene_->add_button(button);
 	qDebug() << "run_menu()";
     }
     scene_->show();
-    buttons_.push_back(new Button({100, 200}, Button::ButtonPurpose::SINGLE_PLAYER));
-    buttons_.push_back(new Button({350, 200}, Button::ButtonPurpose::EXIT));
     main_timer_ = new QTimer(this);
     QObject::connect(main_timer_, SIGNAL(timeout()), this, SLOT(advance_menu()));
     main_timer_->start(10);
