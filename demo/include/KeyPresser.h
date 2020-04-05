@@ -14,13 +14,10 @@
 
 class KeyPresser : public QWidget {
 public:
-    // explicit KeyPresser(Player *player, QWidget *parent = nullptr);
-    // KeyPresser(Player *player1, Player *player2, QWidget *parent = nullptr);
     explicit KeyPresser(QWidget *parent = nullptr);
-    void add_players(Player *player1, Player *player2 = nullptr); // TODO later mb add overload
+    void add_players(Player *player1, Player *player2 = nullptr);
     void remove_players();
     void add_menu(Menu *menu);
-    // remove menu is needless
     void activate(KeyPresserUtility::ManipulatorType type);
     void deactivate(KeyPresserUtility::ManipulatorType type);
 

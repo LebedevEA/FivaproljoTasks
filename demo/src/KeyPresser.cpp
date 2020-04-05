@@ -11,19 +11,6 @@ KeyPresser::KeyPresser(QWidget *parent) {
     setFocus();
 }
 
-// KeyPresser::KeyPresser(Player *player, QWidget *parent) {
-//     manipulators_.push_back(new PlayerManipulator(player));
-//     setWindowOpacity(0.0);
-//     setFocus();
-// }
-
-// KeyPresser::KeyPresser(Player *player1, Player *player2, QWidget *parent) { // TODO добавить второго игрока в вектор
-//     manipulators_.push_back(new PlayerManipulator(player1));
-//     manipulators_.push_back(new PlayerManipulator(player2, Qt::Key_T, Qt::Key_F, Qt::Key_G, Qt::Key_H));
-//     setWindowOpacity(0.0);
-//     setFocus();
-// }
-
 void KeyPresser::keyPressEvent(QKeyEvent *event) {
     for (auto manip : manipulators_) {
 	if (manip->active()) {
