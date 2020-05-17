@@ -73,14 +73,18 @@ bool Socket::receive(Address& sender, char *data, int maxDataSize) {
     return receivedBytes == maxDataSize;
 }
 
-void InternetConnection::setPress(const std::function<void(Utilities::Direction)>& f) {
+void InternetConnection::setPress(const std::function<void(Utilities::Direction)> &f) {
     press = f; // to pay respect
 }
 
-void InternetConnection::setRelease(const std::function<void(Utilities::Direction)>& f) {
+void InternetConnection::setRelease(const std::function<void(Utilities::Direction)> &f) {
     release = f;
 }
 
+void InternetConnection::setClick(const std::function<void(int, Utilities::ButtonPurpose)> &f) {
+    click = f;
+}
+    
 std::vector<char> InternetConnection::buildPacket(bool isPressed, Utilities::Direction dir) { //!pressed=rlsed TODO enum
     std::vector<char> packet(PACKET_SIZE, 0);
     if (isPressed) {
@@ -103,7 +107,24 @@ std::vector<char> InternetConnection::buildPacket(bool isPressed, Utilities::Dir
     return packet;
 }
 
+std::vector<char> InternetConnection::buildPacket(Utilities::ButtonPurpose purpose) {
+    std::vector<char> packet(PACKET_SIZE, 0);
+    packet[0] = 3;
+    if (purpose == Utilities::ButtonPurpose::CUSTOMIZE) {
+	packet[1] = 1;
+    } else if (purpose == Utilities::ButtonPurpose::READY) {
+	packet[1] = 2;
+    } else if (purpose == Utilities::ButtonPurpose::BACK) {
+	packet[1] = 3;
+    }
+    return packet;
+}
+
 Server::Server(u16 port) : socket_(port) {}
+
+int Server::id() const {
+    return 0;
+}
 
 void Server::connect(const Address& addr) {
     connections_.push_back(addr);
@@ -126,8 +147,12 @@ void Server::connect(const Address& addr) {
  * * * | 1 | - отпущена кнопка "Вверх"
  * * * | 2 | - отпущена кнопка "Влево"
  * * * | 3 | - отпущена кнопка "Вниз"
- * * * | 4 | - отпущена кнопка "Вправо
- * | 3 | - id игрока, пока все id считаются равными 1, ибо пока пилю под 2 игрока // хотя лучше определять это у себя по порту
+ * * * | 4 | - отпущена кнопка "Вправо"
+ * | 3 | - клик в меню
+ * * * | 1 | - кликнута кнопка "customize"
+ * * * | 2 | - кликнута кнопка "ready"
+ * * * | 3 | - кликнута кнопка "back"
+ * | X | - id игрока, пока все id считаются равными 1, ибо пока пилю под 2 игрока // хотя лучше определять это у себя по порту
  * Впилить сюда меню
  */
 
@@ -164,7 +189,17 @@ bool Server::receive(int dataMaxSize) { // TODO получив, разослат
                     InternetConnection::release(Utilities::Direction::RIGHT);
                 }
             }
-        }
+        } else if (packet[0] == 3) {
+	    if (InternetConnection::click) {
+		if (packet[1] == 1) {
+		    InternetConnection::click(0, Utilities::ButtonPurpose::CUSTOMIZE);
+		} else if (packet[1] == 2) {
+		    InternetConnection::click(0, Utilities::ButtonPurpose::READY);
+		} else if (packet[1] == 3) {
+		    InternetConnection::click(0, Utilities::ButtonPurpose::BACK);
+		}
+	    }
+	}
         return true;
     } else {
         return false;
@@ -236,7 +271,17 @@ bool Client::receive(int dataMaxSize) {
                     InternetConnection::release(Utilities::Direction::RIGHT);
                 }
             }
-        }
+        } else if (packet[0] == 3) {
+	    if (InternetConnection::click) {
+		if (packet[1] == 1) {
+		    InternetConnection::click(id_, Utilities::ButtonPurpose::CUSTOMIZE);
+		} else if (packet[1] == 2) {
+		    InternetConnection::click(id_, Utilities::ButtonPurpose::READY);
+		} else if (packet[1] == 3) {
+		    InternetConnection::click(id_, Utilities::ButtonPurpose::BACK);
+		}
+	    }
+	}
         return true;
     } else {
         return false;

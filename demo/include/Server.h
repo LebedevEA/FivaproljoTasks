@@ -54,19 +54,24 @@ public:
     virtual void connect(const Address &) = 0;
     virtual bool receive(int dataMaxSize = PACKET_SIZE) = 0;
     virtual void send(const char *data, int dataSize = PACKET_SIZE) = 0;
-    void setPress(const std::function<void(Utilities::Direction)>& f);
-    void setRelease(const std::function<void(Utilities::Direction)>& f);
+    virtual int id() const = 0;
+    void setPress(const std::function<void(Utilities::Direction)> &f);
+    void setRelease(const std::function<void(Utilities::Direction)> &f);
+    void setClick(const std::function<void(int, Utilities::ButtonPurpose)> &f);
     static std::vector<char> buildPacket(bool isPressed, Utilities::Direction dir);
+    static std::vector<char> buildPacket(Utilities::ButtonPurpose purpose);
     virtual std::vector<char> buildPacket(PacketType type) = 0;
 
 protected:
     std::function<void(Utilities::Direction)> press;
     std::function<void(Utilities::Direction)> release;
+    std::function<void(int, Utilities::ButtonPurpose)> click;
 };
 
 class Server : public InternetConnection {
 public:
     explicit Server(u16 port = 5051); // 5051 - порт сервера
+    int id() const override;
     void connect(const Address &addr) override;
     bool receive(int dataMaxSize = PACKET_SIZE) override; // хэндлим прям там
     void send(const char *data, int dataSize = PACKET_SIZE) override;
@@ -81,7 +86,7 @@ private:
 class Client : public InternetConnection {
 public:
     Client(u16 myPort = 5052);
-    int id() const;
+    int id() const override;
     void connect(const Address &addr) override;
     bool receive(int dataMaxSize = PACKET_SIZE) override;
     void send(const char *data, int dataSize = PACKET_SIZE) override;

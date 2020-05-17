@@ -38,6 +38,12 @@ namespace Utilities {
     enum class PacketType {
         INIT
     };
+    
+    enum class ButtonPurpose {
+	CUSTOMIZE,
+	READY,
+	BACK
+    };
 
 } // end namespace Utilities
 

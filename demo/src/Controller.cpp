@@ -80,6 +80,7 @@ void Controller::set_inet_type() {
     std::cin >> inetType;
     if (inetType == "server") {
         internetConnection = new Inet::Server();
+	remoteClicker_ = new PlayerSelectionRemoteClicker(*player_selection, internetConnection);
     } else if (inetType == "client") {
         internetConnection = new Inet::Client();
         while (!localId) {
@@ -91,6 +92,7 @@ void Controller::set_inet_type() {
             if (!localId) {
                 std::cout << "Could not connect. ";
             }
+	    remoteClicker_ = new PlayerSelectionRemoteClicker(*player_selection, internetConnection);
         }
     } else if (inetType == "offline") {
         // nu, bivaet, delat' niche ne nado
@@ -131,7 +133,14 @@ void Controller::set_num_of_players_for_lvl(Utilities::GameNumOfPlayers num) {
  */
 void Controller::run_player_selection() {
     menu_->clear_menu();
+    only for 2 players; DOES NOT WORK
+    if (internetConnection && internetConnection->id() == 1) {
+    	std::swap(players_[1], players_[0]);
+    }
     player_selection->add_players(players_);
+    if (internetConnection && internetConnection->id() == 1) {
+    	std::swap(players_[1], players_[0]);
+    }
     player_selection->run_player_selection();
 }
 

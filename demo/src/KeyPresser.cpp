@@ -220,12 +220,10 @@ void KeyPresser::PlayerManipulator::release(Qt::Key k) {
 KeyPresser::InetPlayerManipulator::InetPlayerManipulator(Player *player, InternetConnection *inetConnection)
     : player_(player)
     , inetConnection_(inetConnection) {
-    std::cout << "MMMM" << std::endl;
     inetConnection_->setPress(std::bind(&KeyPresser::InetPlayerManipulator::press,
                                         this, std::placeholders::_1));
     inetConnection_->setRelease(std::bind(&KeyPresser::InetPlayerManipulator::release,
                                         this, std::placeholders::_1));
-    // Какую-нибудь дичь с таймером....
 }
 
 void KeyPresser::InetPlayerManipulator::press(Utilities::Direction dir) {

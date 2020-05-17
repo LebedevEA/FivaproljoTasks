@@ -41,30 +41,21 @@ class Controller : public QObject {
 Q_OBJECT
 public:
     Controller(int argc, char *argv[]);
-
     ~Controller() override;
 
     int run_game();
-
     void run_player_selection();
 
 private slots:
-//the name suggests that amount of players can be changed - for now this feature is not supported
+    //the name suggests that amount of players can be changed - for now this feature is not supported
     void set_num_of_players_for_lvl(Utilities::GameNumOfPlayers num);
-
     void exit_game();
-
     void end_level();
-
     void run_level(Utilities::GameMode mode);
-
     void set_inet_type();
 
 signals:
-
     void set_run_level();
-
-    //void set_player_selection();
 
 private:
     Application app;
@@ -75,9 +66,9 @@ private:
     Inet::InternetConnection *internetConnection = nullptr;
     KeyPresser *key_presser_ = nullptr;
     Menu *menu_ = nullptr;
-    // KeyPresserHelper *key_presser_helper_ = nullptr;
     std::vector<Player *> players_;
     PlayerSelection *player_selection = nullptr;
     ConnectionUpdater *connUpd_ = nullptr;
+    PlayerSelectionRemoteClicker *remoteClicker_ = nullptr;
     int localId = 0;
 };
